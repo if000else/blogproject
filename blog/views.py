@@ -10,15 +10,16 @@ from django.urls import reverse
 from blog import models
 from django.views.generic import ListView
 from django.db.models import Q
+# from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 
 class IndexView(ListView):
     # post_list = models.Post.objects.all()
     # return render(request, 'blog/index.html', context={'post_list': post_list})
-    # return render(request,'blog/static/index.html',)
     model = Post
     template_name = 'blog/index.html'
-    context_object_name = 'post_list'
+    context_object_name = 'contacts'
     paginate_by = 2
+
 
     def get_context_data(self, **kwargs):
         """
@@ -151,10 +152,12 @@ class IndexView(ListView):
 
         return data
 
+
 def detail(request,pk):
     post = get_object_or_404(Post, pk=pk)
     # 阅读量增加1
     post.increase_views()
+    # 加入markdown插件
     post.body = markdown.markdown(post.body,
                                   extensions=[
                                       'markdown.extensions.extra',
